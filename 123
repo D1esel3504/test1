@@ -1,32 +1,12 @@
-const range = {
-    from : 1,
-    to: 10,
- }
+const btn = document.querySelector("button");
+const body = document.body;
+const ul = document.querySelector("ul");
 
-function CheckNumbers(range) {
-    this.range = range;
-    this.arr = [];
-  
-    this.generate = function() {
-      this.arr.push((Math.random() * (this.range.to - this.range.from) + this.range.from).toFixed(3))
-    };
-
-   this.get = function() {
-       return this.arr
-   }
-    
-   this.clear = function() {
-        this.arr = [];
-   }
-  
-};
-
-  let rangeTwo = new CheckNumbers(range);
-  
-  
-  rangeTwo.generate()
-  rangeTwo.generate()
-  console.log (rangeTwo.get())
-  rangeTwo.clear()
-  console.log (rangeTwo.get())
-
+btn.addEventListener("click", function () {
+  if (ul.style.display === "none") {
+    ul.style.display = "block";
+  } else {
+    console.log("123");
+    ul.style.display = "none";
+  }
+});
