@@ -1,0 +1,19 @@
+const div = document.querySelector('div');
+
+
+div.addEventListener('click',() => {
+div.innerText = '';
+let input = document.createElement('input');
+let value = div.innerText;
+
+input.value = value;
+
+
+div.append(input);
+input.focus()
+
+
+input.addEventListener ('blur',() => {
+  div.innerHTML = input.value;
+  })
+});
