@@ -1,95 +1,108 @@
-'use strict';
-/** 
- * Домашнее задание к занятию 8.
- * Код решения должен быть сразу же после описания задания.
- * Что бы у вас не выполнялся код всех заданий сразу перед тем, как приступить к следующему, предыдущее решение надо закомментировать.
-*/
-
-
 /**
- * Задание 1. Получить элемент с id="unordered_list" тремя способами. Сам элемент находится в файле index.html
-*/
+ * Основная трудность может заключаться в правильном рассчете времени. Для этого надо использовать setInterval.
+ * При запуске функции start() мы должны сохранять время Date.now() в переменную startTime.
+ * Date.now() возвращает кол-во миллисекунд, прошедших с 1 января 1970 года 00:00:00 по UTC.
+ * Внутри фукнции start() должен быть setInterval который каждые 10мс будет отнимать от текущего Date.now() сохраненное значения Date.now (которое в переменной startTime) и обновлять значение переменной lastTime
+ * В таком случае мы получим разницу между стартом таймера и текущим временем в миллисекундах, которая будет храниться в переменной lastTime
+ * Далее конвертируем это значение в нужный нам формат с помощью функции timeToString
+ */
 
-// console.log(document.body.children[1]);
-// console.log(document.body.querySelector('div'));
-// console.log(document.getElementById('unordered_list'));
+// Функция конвертации времени. В качестве аргумента принимает время в миллисекундах.
+function timeToString(time) {
+  let diffInHrs = time / 3600000; // В 1 часе 3600000 миллисекунд. Разделив наше время на это число мы получим значение в часах.
+  let hh = Math.floor(diffInHrs); // Округляем значение
+  let diffInMin = (diffInHrs - hh) * 60;
+  let mm = Math.floor(diffInMin);
+  let diffInSec = (diffInMin - mm) * 60;
+  let ss = Math.floor(diffInSec);
+  let diffInMs = (diffInSec - ss) * 100;
+  let ms = Math.floor(diffInMs);
+  let formattedMM = mm.toString().padStart(2, "0");
+  let formattedSS = ss.toString().padStart(2, "0");
+  let formattedMS = ms.toString().padStart(2, "0");
 
+  return `${formattedMM}:${formattedSS}:${formattedMS}`;
+}
 
-/**
- * Задание 2. Изменить цвет каждого четного элемента (кроме элемента <h2>) в блоке с атрибутом name="text-container" на красный. HTML не изменять.
-*/
+const timerValue = document.querySelector('.value');
+const btnStart = document.querySelector('.button--start');
+const controlsActive = document.querySelector('.controls-active');
+const controlsAPaused = document.querySelector('.controls-paused');
+const btnStop = document.querySelector('.button--pause');
+const btnReset = document.querySelector('.button--reset');
+const btnResume = document.querySelector('.button--resume');
+const btnLap = document.querySelector('.button--lap');
+const table = document.querySelector('.table-row');
 
-// const div = document.getElementsByName(`text-container`);
-
-// let children = div[0].children;
-
-// for (let i = 0; i < children.length; i++) {
-//   if(i % 2 !== 0 && children[i].tagName !== 'h2') 
-//    children[i].style.backgroundColor = 'red' 
-// }
-
-
-/**
- * Задание 3. Запросите у пользователя имя через prompt(). Значение, введенное в prompt необходимо вывести в html.
- * Формат вывода:
- * 1) Создаем новый элемент div через JS
- * 2) Выполняем базовую стилизацию. Добавим зеленый бэкграунд и желтую обводку. Так же стоит задать паддинги в 30px
- * 3) Вставляем новый элемент в качестве ПОСЛЕДНЕГО элемента внутрь body, не забываем добавить значение полученное из prompt внутрь этого элемента
-*/
-
-// let yourName = prompt('Ваше имя?')
-// const div = document.createElement('div');
-// div.style = `
-//  background: green;
-//  border: 20px solid yellow;
-//  padding: 30px;
-//  text-align: center;
-
-// `
-// div.innerHTML = yourName;
-// document.body.append(div)
-
-/**
- * Задание 4. Заполните таблицу с классом my-table данными из объекта data. Таблицу уже есть в файле index.html
- * P.S. Проходимся по массиву и вставляем данные в таблицу. Один объект массива - один tr, свойство объекта - td.
- * P.S.S. Так же стоит вынести формирование tr в отдельную функцию
-*/
-
-// const data = [
-//   {
-//     name: 'John',
-//     age: 23,
-//     salary: '100000'
-//   },
-//   {
-//     name: 'Mary',
-//     age: 34,
-//     salary: '58000'
-//   },
-//   {
-//     name: 'Max',
-//     age: 50,
-//     salary: '121500'
-//   },
-//   {
-//     name: 'Adam',
-//     age: 18,
-//     salary: '65200'
-//   }
-// ];
+let clicks = 0;
+let timerId;
+let initTime = Date.now();
+let currentTime = initTime;
 
 
+const setValue = (newValue) => {
+  timerValue.textContent = newValue;
+};
 
-/**
- * Задание 5. Написать функцию, которая будет доставать все данные из таблицы
- * На вход в эту функцию мы должны передавать DOM элемент таблицы.
- * Надо предусмотреть проверку на то, является ли элемент тэгом <table>
- * На выходе должен быть массив следующего вида:
-  const data = [
-    ['John', '23', '100000'], // Элемент массива data - это массив со всеми данными из <td>
-    ['Mary', '34', '58000'],
-    ['Max', '50', '121500'],
-    ['Adam', '18', '65200'],
-  ];
-*/
+function start() {
+  timerId = setInterval(() => {
+    currentTime += 100;
+    setValue(timeToString(currentTime - initTime));
+  }, 100)
+};
+
+function stopTimer() {
+  clearInterval(timerId);
+};
+
+function resetTimer() {
+  currentTime = Date.now();
+  initTime = Date.now();
+  setValue(timeToString(0));
+};
+
+function countLap() {
+  clicks++;
+  let currentValue = timeToString(currentTime - initTime);
+  table.insertAdjacentHTML('afterend', (`
+    <div class="table-row table-reset"> 
+    <div class="table-cell">Круг ${clicks}</div>
+    <div class="table-cell">${currentValue}</div>
+  </div>
+  `)
+  )};
+
+
+btnStart.addEventListener('click', () => {
+  start();
+  controlsActive.classList.remove('hidden');
+  btnStart.classList.add('hidden');
+});
+
+
+btnStop.addEventListener('click', () => {
+  stopTimer();
+  controlsActive.classList.add('hidden');
+  controlsAPaused.classList.remove('hidden');
+});
+
+btnReset.addEventListener('click', () => {
+  resetTimer();
+
+  let tableReset = document.querySelectorAll('.table-reset');
+  for (const iterator of tableReset) {
+    iterator.remove()
+  }
+});
+
+
+btnResume.addEventListener('click', () => {
+  start();
+  controlsActive.classList.remove('hidden');
+  controlsAPaused.classList.add('hidden');
+});
+
+btnLap.addEventListener('click', () => {
+  countLap()
+});
 
