@@ -1,108 +1,16 @@
-/**
- * Основная трудность может заключаться в правильном рассчете времени. Для этого надо использовать setInterval.
- * При запуске функции start() мы должны сохранять время Date.now() в переменную startTime.
- * Date.now() возвращает кол-во миллисекунд, прошедших с 1 января 1970 года 00:00:00 по UTC.
- * Внутри фукнции start() должен быть setInterval который каждые 10мс будет отнимать от текущего Date.now() сохраненное значения Date.now (которое в переменной startTime) и обновлять значение переменной lastTime
- * В таком случае мы получим разницу между стартом таймера и текущим временем в миллисекундах, которая будет храниться в переменной lastTime
- * Далее конвертируем это значение в нужный нам формат с помощью функции timeToString
- */
-
-// Функция конвертации времени. В качестве аргумента принимает время в миллисекундах.
-function timeToString(time) {
-  let diffInHrs = time / 3600000; // В 1 часе 3600000 миллисекунд. Разделив наше время на это число мы получим значение в часах.
-  let hh = Math.floor(diffInHrs); // Округляем значение
-  let diffInMin = (diffInHrs - hh) * 60;
-  let mm = Math.floor(diffInMin);
-  let diffInSec = (diffInMin - mm) * 60;
-  let ss = Math.floor(diffInSec);
-  let diffInMs = (diffInSec - ss) * 100;
-  let ms = Math.floor(diffInMs);
-  let formattedMM = mm.toString().padStart(2, "0");
-  let formattedSS = ss.toString().padStart(2, "0");
-  let formattedMS = ms.toString().padStart(2, "0");
-
-  return `${formattedMM}:${formattedSS}:${formattedMS}`;
-}
-
-const timerValue = document.querySelector('.value');
-const btnStart = document.querySelector('.button--start');
-const controlsActive = document.querySelector('.controls-active');
-const controlsAPaused = document.querySelector('.controls-paused');
-const btnStop = document.querySelector('.button--pause');
-const btnReset = document.querySelector('.button--reset');
-const btnResume = document.querySelector('.button--resume');
-const btnLap = document.querySelector('.button--lap');
-const table = document.querySelector('.table-row');
-
-let clicks = 0;
-let timerId;
-let initTime = Date.now();
-let currentTime = initTime;
+npm i react react-dom
+npm i -D  webpack webpack-cli webpack-dev-server
+npm i -D @babel/core @babel/preset-env @babel/preset-react babel-loader     -    чуть что записываем по 1ому
 
 
-const setValue = (newValue) => {
-  timerValue.textContent = newValue;
-};
-
-function start() {
-  timerId = setInterval(() => {
-    currentTime += 100;
-    setValue(timeToString(currentTime - initTime));
-  }, 100)
-};
-
-function stopTimer() {
-  clearInterval(timerId);
-};
-
-function resetTimer() {
-  currentTime = Date.now();
-  initTime = Date.now();
-  setValue(timeToString(0));
-};
-
-function countLap() {
-  clicks++;
-  let currentValue = timeToString(currentTime - initTime);
-  table.insertAdjacentHTML('afterend', (`
-    <div class="table-row table-reset"> 
-    <div class="table-cell">Круг ${clicks}</div>
-    <div class="table-cell">${currentValue}</div>
-  </div>
-  `)
-  )};
 
 
-btnStart.addEventListener('click', () => {
-  start();
-  controlsActive.classList.remove('hidden');
-  btnStart.classList.add('hidden');
-});
 
 
-btnStop.addEventListener('click', () => {
-  stopTimer();
-  controlsActive.classList.add('hidden');
-  controlsAPaused.classList.remove('hidden');
-});
 
-btnReset.addEventListener('click', () => {
-  resetTimer();
-
-  let tableReset = document.querySelectorAll('.table-reset');
-  for (const iterator of tableReset) {
-    iterator.remove()
-  }
-});
-
-
-btnResume.addEventListener('click', () => {
-  start();
-  controlsActive.classList.remove('hidden');
-  controlsAPaused.classList.add('hidden');
-});
-
-btnLap.addEventListener('click', () => {
-  countLap()
-});
-
+   "@babel/core": "^7.13.10",
+   "@babel/preset-env": "^7.13.10",
+   "@babel/preset-react": "^7.12.13",
+   "babel-loader": "^8.2.2",  
+   
+   вставляем в девДепенденсис в верх самый 
